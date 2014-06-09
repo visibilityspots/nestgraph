@@ -129,15 +129,15 @@ function brushUpdate() {
   x.domain(brush.empty() ? x2.domain() : brush.extent());
   upper.select(".x.axis").call(xAxis);
   upper.selectAll(".plot path")
-    .attr("d", function(d) { 
-      if (d.name == "current") 
-	return line(d.values); 
+    .attr("d", function(d) {
+      if (d.name == "current")
+	return line(d.values);
       else
-	return lineStepafter(d.values); 
+	return lineStepafter(d.values);
     })
   upper.selectAll("circle")
-    .attr("cx", function(d) { return x(d.date); }) 
-    .attr("cy", function(d) { return y(d.val); }) 
+    .attr("cx", function(d) { return x(d.date); })
+    .attr("cy", function(d) { return y(d.val); })
 }
 
 // fetch the data
@@ -147,13 +147,13 @@ d3.tsv("fetch.php?hrs=" + hours, function(error, data) {
   data.forEach(function(d) {
     d.date = parseDate(d.timestamp);
   });
-  
+
   var points = color.domain().map(function(name) {
     var x = {
       name: name,
       values: data.map(function(d) {
-	if (name == "heating") 
-          return { date: d.date, val: +d[name] + 60 };
+	if (name == "heating")
+          return { date: d.date, val: +d[name] + 36 };
 	else
           return { date: d.date, val: +d[name] };
       })
@@ -188,8 +188,8 @@ d3.tsv("fetch.php?hrs=" + hours, function(error, data) {
     .attr("y", 6)
     .attr("dy", ".71em")
     .style("text-anchor", "end")
-    .text("Temperature (F)");
-  
+    .text("Temperature (C)");
+
   // draw lower x axis
   lower.append("g")
     .attr("class", "x axis lower")
@@ -218,14 +218,14 @@ d3.tsv("fetch.php?hrs=" + hours, function(error, data) {
   upper.selectAll(".plot")
     .append("path")
     .attr("class", "line")
-    .attr("d", function(d) { 
-      if (d.name == "current") 
-	return line(d.values); 
+    .attr("d", function(d) {
+      if (d.name == "current")
+	return line(d.values);
       else
-	return lineStepafter(d.values); 
+	return lineStepafter(d.values);
     })
-    .style("stroke", function(d) { 
-      return color(d.name); 
+    .style("stroke", function(d) {
+      return color(d.name);
     })
     .attr("clip-path", "url(#clip)");
 
@@ -233,11 +233,11 @@ d3.tsv("fetch.php?hrs=" + hours, function(error, data) {
   lower.selectAll(".plot")
     .append("path")
     .attr("class", "line")
-    .attr("d", function(d) { 
-      if (d.name == "current") 
-	return line2(d.values); 
+    .attr("d", function(d) {
+      if (d.name == "current")
+	return line2(d.values);
       else
-	return lineStepafter2(d.values); 
+	return lineStepafter2(d.values);
     })
     .style("stroke", function(d) { return color(d.name); });
 
@@ -261,16 +261,16 @@ d3.tsv("fetch.php?hrs=" + hours, function(error, data) {
   upper.selectAll(".circles").selectAll(".thecircles")
     .data((points.filter(function(f) { return f.name == 'current'; }))[0].values)
     .enter().append("circle")
-    .attr("cx", function(d) { return x(d.date); }) 
-    .attr("cy", function(d) { return y(d.val); }) 
-    .attr("r", 10) 
+    .attr("cx", function(d) { return x(d.date); })
+    .attr("cy", function(d) { return y(d.val); })
+    .attr("r", 10)
     .attr("stroke", "black")
     .attr("stroke-width", 1)
-    .attr("opacity", 0.1) 
+    .attr("opacity", 0.1)
     .append("svg:title").text(function(d) {
       return format(d.date) + "\n" + d.val + "\u00B0 F";
     });
-  
+
   // draw the d3 pan/zoom "brush" object
   lower.append("g")
     .attr("class", "x brush")
